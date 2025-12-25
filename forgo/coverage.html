@@ -1,0 +1,1230 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>classes: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">lab3_1/classes/DList.go (91.8%)</option>
+				
+				<option value="file1">lab3_1/classes/LList.go (92.9%)</option>
+				
+				<option value="file2">lab3_1/classes/array.go (92.3%)</option>
+				
+				<option value="file3">lab3_1/classes/cbt.go (93.9%)</option>
+				
+				<option value="file4">lab3_1/classes/hash.go (100.0%)</option>
+				
+				<option value="file5">lab3_1/classes/queue.go (100.0%)</option>
+				
+				<option value="file6">lab3_1/classes/srz.go (0.0%)</option>
+				
+				<option value="file7">lab3_1/classes/stack.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package classes
+
+import (
+        "fmt"
+)
+
+type nodeDL struct {
+        data string
+        prev *nodeDL
+        next *nodeDL
+}
+
+type DoublyList struct {
+        head *nodeDL // private поле
+        tail *nodeDL // private поле
+}
+
+func NewDL() *DoublyList <span class="cov8" title="1">{
+        return &amp;DoublyList{}
+}</span>
+
+func (l *DoublyList) find(value string) *nodeDL <span class="cov8" title="1">{
+        cur := l.head
+        for cur != nil </span><span class="cov8" title="1">{
+                if cur.data == value </span><span class="cov8" title="1">{
+                        return cur
+                }</span>
+                <span class="cov8" title="1">cur = cur.next</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (l *DoublyList) AddHead(value string) <span class="cov8" title="1">{
+        newNode := &amp;nodeDL{data: value, next: l.head}
+        if l.head != nil </span><span class="cov8" title="1">{
+                l.head.prev = newNode
+        }</span> else<span class="cov8" title="1"> {
+                l.tail = newNode
+        }</span>
+        <span class="cov8" title="1">l.head = newNode</span>
+}
+
+func (l *DoublyList) AddTail(value string) <span class="cov8" title="1">{
+        newNode := &amp;nodeDL{data: value, prev: l.tail}
+        if l.tail != nil </span><span class="cov8" title="1">{
+                l.tail.next = newNode
+        }</span> else<span class="cov0" title="0"> {
+                l.head = newNode
+        }</span>
+        <span class="cov8" title="1">l.tail = newNode</span>
+}
+
+func (l *DoublyList) AddAfter(target, value string) <span class="cov8" title="1">{
+        ptr := l.find(target)
+        if ptr == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">newNode := &amp;nodeDL{data: value, prev: ptr, next: ptr.next}
+        if ptr.next != nil </span><span class="cov8" title="1">{
+                ptr.next.prev = newNode
+        }</span> else<span class="cov8" title="1"> {
+                l.tail = newNode
+        }</span>
+        <span class="cov8" title="1">ptr.next = newNode</span>
+}
+
+func (l *DoublyList) AddBefore(target, value string) <span class="cov8" title="1">{
+        ptr := l.find(target)
+        if ptr == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">if ptr.prev == nil </span><span class="cov0" title="0">{
+                l.AddHead(value)
+                return
+        }</span>
+
+        <span class="cov8" title="1">newNode := &amp;nodeDL{data: value, prev: ptr.prev, next: ptr}
+        ptr.prev.next = newNode
+        ptr.prev = newNode</span>
+}
+
+func (l *DoublyList) DeleteHead() <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">tmp := l.head
+        l.head = tmp.next
+
+        if l.head != nil </span><span class="cov8" title="1">{
+                l.head.prev = nil
+        }</span> else<span class="cov8" title="1"> {
+                l.tail = nil
+        }</span>
+}
+
+func (l *DoublyList) DeleteTail() <span class="cov8" title="1">{
+        if l.tail == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">tmp := l.tail
+        l.tail = tmp.prev
+
+        if l.tail != nil </span><span class="cov8" title="1">{
+                l.tail.next = nil
+        }</span> else<span class="cov0" title="0"> {
+                l.head = nil
+        }</span>
+}
+
+func (l *DoublyList) DeleteAfter(target string) <span class="cov8" title="1">{
+        ptr := l.find(target)
+        if ptr == nil || ptr.next == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">tmp := ptr.next
+        ptr.next = tmp.next
+
+        if tmp.next != nil </span><span class="cov8" title="1">{
+                tmp.next.prev = ptr
+        }</span> else<span class="cov0" title="0"> {
+                l.tail = ptr
+        }</span>
+}
+
+func (l *DoublyList) DeleteBefore(target string) <span class="cov8" title="1">{
+        ptr := l.find(target)
+        if ptr == nil || ptr.prev == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">tmp := ptr.prev
+        ptr.prev = tmp.prev
+
+        if tmp.prev != nil </span><span class="cov8" title="1">{
+                tmp.prev.next = ptr
+        }</span> else<span class="cov8" title="1"> {
+                l.head = ptr
+        }</span>
+}
+
+func (l *DoublyList) DeleteByValue(value string) <span class="cov8" title="1">{
+        ptr := l.find(value)
+        if ptr == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">if ptr == l.head </span><span class="cov8" title="1">{
+                l.DeleteHead()
+                return
+        }</span>
+        <span class="cov8" title="1">if ptr == l.tail </span><span class="cov8" title="1">{
+                l.DeleteTail()
+                return
+        }</span>
+
+        <span class="cov8" title="1">ptr.prev.next = ptr.next
+        ptr.next.prev = ptr.prev</span>
+}
+
+func (l *DoublyList) PrintForward() <span class="cov8" title="1">{
+        cur := l.head
+        for cur != nil </span><span class="cov8" title="1">{
+                fmt.Print(cur.data, " ")
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+
+func (l *DoublyList) PrintBackward() <span class="cov8" title="1">{
+        cur := l.tail
+        for cur != nil </span><span class="cov8" title="1">{
+                fmt.Print(cur.data, " ")
+                cur = cur.prev
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package classes
+
+import (
+        "fmt"
+)
+
+type nodeFL struct {
+        data string
+        next *nodeFL
+}
+
+type ForwardList struct {
+        head *nodeFL
+}
+
+// ===== constructor / destructor =====
+
+func NewFL() *ForwardList <span class="cov8" title="1">{
+        return &amp;ForwardList{head: nil}
+}</span>
+
+func (l *ForwardList) Clear() <span class="cov8" title="1">{
+        l.head = nil // GC всё подчистит
+}</span>
+
+// ===== helpers =====
+
+func (l *ForwardList) Find(value string) *nodeFL <span class="cov8" title="1">{
+        cur := l.head
+        for cur != nil </span><span class="cov8" title="1">{
+                if cur.data == value </span><span class="cov8" title="1">{
+                        return cur
+                }</span>
+                <span class="cov8" title="1">cur = cur.next</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+// ===== queries =====
+
+func (l *ForwardList) Contains(value string) bool <span class="cov0" title="0">{
+        return l.Find(value) != nil
+}</span>
+
+func (l *ForwardList) ToSlice() []string <span class="cov8" title="1">{
+        var out []string
+        cur := l.head
+        for cur != nil </span><span class="cov8" title="1">{
+                out = append(out, cur.data)
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">return out</span>
+}
+
+// ===== add =====
+
+func (l *ForwardList) AddHead(value string) <span class="cov8" title="1">{
+        l.head = &amp;nodeFL{data: value, next: l.head}
+}</span>
+
+func (l *ForwardList) AddTail(value string) <span class="cov8" title="1">{
+        newNode := &amp;nodeFL{data: value}
+        if l.head == nil </span><span class="cov8" title="1">{
+                l.head = newNode
+                return
+        }</span>
+        <span class="cov8" title="1">cur := l.head
+        for cur.next != nil </span><span class="cov8" title="1">{
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">cur.next = newNode</span>
+}
+
+func (l *ForwardList) AddAfter(target, value string) <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                fmt.Println("Список пуст")
+                return
+        }</span>
+        <span class="cov8" title="1">ptr := l.Find(target)
+        if ptr == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov0" title="0">ptr.next = &amp;nodeFL{data: value, next: ptr.next}</span>
+}
+
+func (l *ForwardList) AddBefore(target, value string) <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                fmt.Println("Список пуст")
+                return
+        }</span>
+        <span class="cov8" title="1">if l.head.data == target </span><span class="cov8" title="1">{
+                l.AddHead(value)
+                return
+        }</span>
+
+        <span class="cov8" title="1">cur := l.head
+        for cur.next != nil &amp;&amp; cur.next.data != target </span><span class="cov8" title="1">{
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">if cur.next != nil </span><span class="cov0" title="0">{
+                cur.next = &amp;nodeFL{data: value, next: cur.next}
+        }</span>
+}
+
+// ===== delete =====
+
+func (l *ForwardList) DeleteHead() <span class="cov8" title="1">{
+        if l.head != nil </span><span class="cov8" title="1">{
+                l.head = l.head.next
+        }</span>
+}
+
+func (l *ForwardList) DeleteTail() <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+        <span class="cov8" title="1">if l.head.next == nil </span><span class="cov8" title="1">{
+                l.head = nil
+                return
+        }</span>
+        <span class="cov8" title="1">cur := l.head
+        for cur.next.next != nil </span><span class="cov8" title="1">{
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">cur.next = nil</span>
+}
+
+func (l *ForwardList) DeleteAfter(target string) <span class="cov8" title="1">{
+        ptr := l.Find(target)
+        if ptr == nil || ptr.next == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">ptr.next = ptr.next.next</span>
+}
+
+func (l *ForwardList) DeleteBefore(target string) <span class="cov8" title="1">{
+        if l.head == nil || l.head.next == nil || l.head.data == target </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">var prev *nodeFL
+        cur := l.head
+
+        for cur.next != nil &amp;&amp; cur.next.data != target </span><span class="cov8" title="1">{
+                prev = cur
+                cur = cur.next
+        }</span>
+
+        <span class="cov8" title="1">if cur.next == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">if prev == nil </span><span class="cov8" title="1">{
+                l.DeleteHead()
+        }</span> else<span class="cov8" title="1"> {
+                prev.next = cur.next
+        }</span>
+}
+
+func (l *ForwardList) DeleteValue(value string) <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+        <span class="cov8" title="1">if l.head.data == value </span><span class="cov8" title="1">{
+                l.DeleteHead()
+                return
+        }</span>
+
+        <span class="cov8" title="1">cur := l.head
+        for cur.next != nil &amp;&amp; cur.next.data != value </span><span class="cov0" title="0">{
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">if cur.next != nil </span><span class="cov8" title="1">{
+                cur.next = cur.next.next
+        }</span>
+}
+
+// ===== print =====
+
+func (l *ForwardList) Print() <span class="cov8" title="1">{
+        cur := l.head
+        for cur != nil </span><span class="cov8" title="1">{
+                fmt.Print(cur.data, " ")
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package classes
+
+import (
+        "fmt"
+)
+
+type Array struct { // PUBLIC
+        data     []string // private
+        size     int      // private
+        capacity int      // private
+}
+
+// =======================
+// Constructor
+// =======================
+
+func NewArray() *Array <span class="cov8" title="1">{ // PUBLIC
+        return &amp;Array{
+                data:     make([]string, 2),
+                size:     0,
+                capacity: 2,
+        }
+}</span>
+
+// =======================
+// Private helper
+// =======================
+
+func (a *Array) resize(newCapacity int) <span class="cov8" title="1">{ // PRIVATE
+        newData := make([]string, newCapacity)
+        copy(newData, a.data)
+        a.data = newData
+        a.capacity = newCapacity
+}</span>
+
+// =======================
+// Public methods
+// =======================
+
+func (a *Array) PushBack(value string) <span class="cov8" title="1">{
+        if a.size &gt;= a.capacity </span><span class="cov8" title="1">{
+                a.resize(a.capacity * 2)
+        }</span>
+        <span class="cov8" title="1">a.data[a.size] = value
+        a.size++</span>
+}
+
+func (a *Array) Insert(index int, value string) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt; a.size </span><span class="cov8" title="1">{
+                fmt.Println("Ошибка: индекс вне диапазона")
+                return
+        }</span>
+
+        <span class="cov8" title="1">a.PushBack("")
+        for i := a.size - 1; i &gt; index; i-- </span><span class="cov8" title="1">{
+                a.data[i] = a.data[i-1]
+        }</span>
+        <span class="cov8" title="1">a.data[index] = value</span>
+}
+
+func (a *Array) Delete(index int) <span class="cov8" title="1">{
+        if a.size == 0 </span><span class="cov8" title="1">{
+                fmt.Println("Массив пуст")
+                return
+        }</span>
+        <span class="cov8" title="1">if index &lt; 0 || index &gt;= a.size </span><span class="cov0" title="0">{
+                fmt.Println("Ошибка: индекс вне диапазона")
+                return
+        }</span>
+
+        <span class="cov8" title="1">for i := index; i &lt; a.size-1; i++ </span><span class="cov8" title="1">{
+                a.data[i] = a.data[i+1]
+        }</span>
+        <span class="cov8" title="1">a.size--</span>
+}
+
+func (a *Array) Get(index int) string <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= a.size </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov0" title="0">return a.data[index]</span>
+}
+
+func (a *Array) Replace(index int, value string) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= a.size </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">a.data[index] = value</span>
+}
+
+func (a *Array) Length() int <span class="cov8" title="1">{
+        return a.size
+}</span>
+
+func (a *Array) Print() <span class="cov8" title="1">{
+        if a.size == 0 </span><span class="cov8" title="1">{
+                fmt.Println("Массив пуст")
+                return
+        }</span>
+
+        <span class="cov8" title="1">fmt.Print("Массив: ")
+        for i := 0; i &lt; a.size; i++ </span><span class="cov8" title="1">{
+                fmt.Print(a.data[i], " ")
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package classes
+
+import (
+  "container/list"
+  "fmt"
+)
+
+// TreeNode (private)
+
+type treeNode struct {
+  data  int
+  left  *treeNode
+  right *treeNode
+}
+
+// CompleteBinaryTree (public)
+type CompleteBinaryTree struct {
+  root *treeNode // приватный корень
+}
+
+// Constructor
+
+func NewCompleteBinaryTree() *CompleteBinaryTree <span class="cov8" title="1">{
+  return &amp;CompleteBinaryTree{root: nil}
+}</span>
+
+func (t *CompleteBinaryTree) Insert(value int) <span class="cov8" title="1">{
+  node := &amp;treeNode{data: value}
+  if t.root == nil </span><span class="cov8" title="1">{
+    t.root = node
+    return
+  }</span>
+
+  <span class="cov8" title="1">q := list.New()
+  q.PushBack(t.root)
+
+  for q.Len() &gt; 0 </span><span class="cov8" title="1">{
+    cur := q.Remove(q.Front()).(*treeNode)
+
+    if cur.left == nil </span><span class="cov8" title="1">{
+      cur.left = node
+      return
+    }</span> else<span class="cov8" title="1"> {
+      q.PushBack(cur.left)
+    }</span>
+
+    <span class="cov8" title="1">if cur.right == nil </span><span class="cov8" title="1">{
+      cur.right = node
+      return
+    }</span> else<span class="cov8" title="1"> {
+      q.PushBack(cur.right)
+    }</span>
+  }
+}
+
+func (t *CompleteBinaryTree) Search(value int) bool <span class="cov8" title="1">{
+  if t.root == nil </span><span class="cov0" title="0">{
+    return false
+  }</span>
+
+  <span class="cov8" title="1">q := list.New()
+  q.PushBack(t.root)
+
+  for q.Len() &gt; 0 </span><span class="cov8" title="1">{
+    cur := q.Remove(q.Front()).(*treeNode)
+    if cur.data == value </span><span class="cov8" title="1">{
+      return true
+    }</span>
+    <span class="cov8" title="1">if cur.left != nil </span><span class="cov8" title="1">{
+      q.PushBack(cur.left)
+    }</span>
+    <span class="cov8" title="1">if cur.right != nil </span><span class="cov8" title="1">{
+      q.PushBack(cur.right)
+    }</span>
+  }
+  <span class="cov8" title="1">return false</span>
+}
+
+func (t *CompleteBinaryTree) IsComplete() bool <span class="cov8" title="1">{
+  if t.root == nil </span><span class="cov0" title="0">{
+    return true
+  }</span>
+
+  <span class="cov8" title="1">q := list.New()
+  q.PushBack(t.root)
+  flag := false
+
+  for q.Len() &gt; 0 </span><span class="cov8" title="1">{
+    cur := q.Remove(q.Front()).(*treeNode)
+
+    if cur.left != nil </span><span class="cov8" title="1">{
+      if flag </span><span class="cov0" title="0">{
+        return false
+      }</span>
+      <span class="cov8" title="1">q.PushBack(cur.left)</span>
+    } else<span class="cov8" title="1"> {
+      flag = true
+    }</span>
+
+    <span class="cov8" title="1">if cur.right != nil </span><span class="cov8" title="1">{
+      if flag </span><span class="cov8" title="1">{
+        return false
+      }</span>
+      <span class="cov8" title="1">q.PushBack(cur.right)</span>
+    } else<span class="cov8" title="1"> {
+      flag = true
+    }</span>
+  }
+  <span class="cov8" title="1">return true</span>
+}
+
+func (t *CompleteBinaryTree) Print() <span class="cov8" title="1">{
+  t.printNode(t.root, 0)
+}</span>
+
+func (t *CompleteBinaryTree) printNode(node *treeNode, indent int) <span class="cov8" title="1">{
+  if node == nil </span><span class="cov0" title="0">{
+    return
+  }</span>
+  <span class="cov8" title="1">if node.right != nil </span><span class="cov8" title="1">{
+    t.printNode(node.right, indent+4)
+  }</span>
+  <span class="cov8" title="1">if indent &gt; 0 </span><span class="cov8" title="1">{
+    fmt.Print(fmt.Sprintf("%*s", indent, ""))
+  }</span>
+  <span class="cov8" title="1">fmt.Println(node.data)
+  if node.left != nil </span><span class="cov8" title="1">{
+    t.printNode(node.left, indent+4)
+  }</span>
+}
+
+func (t *CompleteBinaryTree) clear() <span class="cov8" title="1">{
+  t.clearNode(t.root)
+  t.root = nil
+}</span>
+
+func (t *CompleteBinaryTree) clearNode(node *treeNode) <span class="cov8" title="1">{
+  if node == nil </span><span class="cov8" title="1">{
+    return
+  }</span>
+  <span class="cov8" title="1">t.clearNode(node.left)
+  t.clearNode(node.right)
+  node.left = nil
+  node.right = nil</span>
+}</pre>
+		
+		<pre class="file" id="file4" style="display: none">package classes
+
+import (
+        "fmt"
+        "hash/fnv"
+)
+
+// Item представляет элемент хеш-таблицы
+type Item struct {
+        Key   string
+        Value int
+        IsSet bool // Флаг, указывающий, занята ли ячейка
+}
+
+// HashTable структура
+type HashTable struct {
+        Storage []Item
+        Size    int
+        Count   int
+}
+
+// NewHashTable создает таблицу заданного размера
+func NewHashTable(size int) *HashTable <span class="cov8" title="1">{
+        return &amp;HashTable{
+                Storage: make([]Item, size),
+                Size:    size,
+        }
+}</span>
+
+// h1 - первичная хеш-функция
+func (ht *HashTable) h1(key string) int <span class="cov8" title="1">{
+        h := fnv.New32a()
+        h.Write([]byte(key))
+        return int(h.Sum32()) % ht.Size
+}</span>
+
+// h2 - вторичная хеш-функция (определяет шаг)
+// Важно: шаг должен быть взаимно простым с размером таблицы
+func (ht *HashTable) h2(key string) int <span class="cov8" title="1">{
+        h := fnv.New32a()
+        h.Write([]byte(key + "salt")) // Изменяем вход для второго хеша
+        step := (int(h.Sum32()) % (ht.Size - 1)) + 1
+        return step
+}</span>
+
+// Insert добавляет или обновляет элемент
+func (ht *HashTable) Insert(key string, value int) <span class="cov8" title="1">{
+        if ht.Count &gt;= ht.Size </span><span class="cov8" title="1">{
+                fmt.Println("Table is full")
+                return
+        }</span>
+
+        <span class="cov8" title="1">index := ht.h1(key)
+        step := ht.h2(key)
+
+        for ht.Storage[index].IsSet &amp;&amp; ht.Storage[index].Key != key </span><span class="cov8" title="1">{
+                index = (index + step) % ht.Size
+        }</span>
+
+        <span class="cov8" title="1">if !ht.Storage[index].IsSet </span><span class="cov8" title="1">{
+                ht.Count++
+        }</span>
+        <span class="cov8" title="1">ht.Storage[index] = Item{Key: key, Value: value, IsSet: true}</span>
+}
+
+// Get ищет значение по ключу
+func (ht *HashTable) Get(key string) (int, bool) <span class="cov8" title="1">{
+        index := ht.h1(key)
+        step := ht.h2(key)
+
+        startPos := index
+
+        for ht.Storage[index].IsSet </span><span class="cov8" title="1">{
+                if ht.Storage[index].Key == key </span><span class="cov8" title="1">{
+                        return ht.Storage[index].Value, true
+                }</span>
+                <span class="cov8" title="1">index = (index + step) % ht.Size
+                if index == startPos </span><span class="cov8" title="1">{ // Прошли полный круг
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">return 0, false</span>
+}
+
+// Delete удаляет элемент по ключу (ленивое удаление)
+func (ht *HashTable) Delete(key string) <span class="cov8" title="1">{
+        index := ht.h1(key)
+        step := ht.h2(key)
+        initialIndex := index
+
+        for ht.Storage[index].IsSet </span><span class="cov8" title="1">{
+                if ht.Storage[index].Key == key </span><span class="cov8" title="1">{
+                        ht.Storage[index].IsSet = false
+                        ht.Storage[index].Key = "" // Очищаем ключ
+                        ht.Count--
+                        return
+                }</span>
+                <span class="cov8" title="1">index = (index + step) % ht.Size
+                if index == initialIndex </span><span class="cov8" title="1">{
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">fmt.Println("Key not found for deletion")</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package classes
+
+import (
+        "fmt"
+)
+
+// private node
+
+type queueNode struct {
+        data string
+        next *queueNode
+}
+
+// Queue (PUBLIC)
+
+type Queue struct {
+        front *queueNode // private
+        rear  *queueNode // private
+}
+
+func NewQueue() *Queue <span class="cov8" title="1">{ // PUBLIC
+        return &amp;Queue{
+                front: nil,
+                rear:  nil,
+        }
+}</span>
+
+// Public methods
+
+// добавление в конец очереди
+func (q *Queue) Push(value string) <span class="cov8" title="1">{
+        newNode := &amp;queueNode{
+                data: value,
+                next: nil,
+        }
+
+        if q.rear == nil </span><span class="cov8" title="1">{ // очередь пустая
+                q.front = newNode
+                q.rear = newNode
+                return
+        }</span>
+
+        <span class="cov8" title="1">q.rear.next = newNode
+        q.rear = newNode</span>
+}
+
+// удаление первого элемента
+func (q *Queue) Pop() string <span class="cov8" title="1">{
+        if q.front == nil </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+
+        <span class="cov8" title="1">value := q.front.data
+        q.front = q.front.next
+
+        if q.front == nil </span><span class="cov8" title="1">{ // очередь стала пустой
+                q.rear = nil
+        }</span>
+
+        <span class="cov8" title="1">return value</span>
+}
+
+func (q *Queue) IsEmpty() bool <span class="cov8" title="1">{
+        return q.front == nil
+}</span>
+
+func (q *Queue) Print() <span class="cov8" title="1">{
+        if q.IsEmpty() </span><span class="cov8" title="1">{
+                fmt.Println("Очередь пуста")
+                return
+        }</span>
+
+        <span class="cov8" title="1">fmt.Print("Очередь (слева направо): ")
+        cur := q.front
+        for cur != nil </span><span class="cov8" title="1">{
+                fmt.Print(cur.data, " ")
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package classes
+
+import (
+        "encoding/gob"
+        "encoding/json"
+        "os"
+)
+
+// =================================================================
+// ОБЩИЕ УТИЛИТЫ (Вспомогательные функции)
+// =================================================================
+
+func saveToFile(filename string, data interface{}, isBinary bool) error <span class="cov0" title="0">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        if isBinary </span><span class="cov0" title="0">{
+                return gob.NewEncoder(file).Encode(data)
+        }</span>
+        <span class="cov0" title="0">return json.NewEncoder(file).Encode(data)</span>
+}
+
+func loadFromFile(filename string, target interface{}, isBinary bool) error <span class="cov0" title="0">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        if isBinary </span><span class="cov0" title="0">{
+                return gob.NewDecoder(file).Decode(target)
+        }</span>
+        <span class="cov0" title="0">return json.NewDecoder(file).Decode(target)</span>
+}
+
+// =================================================================
+// 1. ОДНОСВЯЗНЫЙ СПИСОК (ForwardList)
+// =================================================================
+
+func (l *ForwardList) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        // Используем ваш метод ToSlice из LList.go
+        data := l.ToSlice()
+        return saveToFile(filename, data, isBinary)
+}</span>
+
+func (l *ForwardList) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">l.Clear() // Очищаем текущий список
+        for _, v := range data </span><span class="cov0" title="0">{
+                l.AddTail(v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// =================================================================
+// 2. ДВУСВЯЗНЫЙ СПИСОК (DoublyList)
+// =================================================================
+
+func (l *DoublyList) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        cur := l.head // Доступ к приватному полю head из DList.go
+        for cur != nil </span><span class="cov0" title="0">{
+                data = append(data, cur.data)
+                cur = cur.next
+        }</span>
+        <span class="cov0" title="0">return saveToFile(filename, data, isBinary)</span>
+}
+
+func (l *DoublyList) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        // Очистка списка перед загрузкой
+        <span class="cov0" title="0">l.head = nil
+        l.tail = nil
+        for _, v := range data </span><span class="cov0" title="0">{
+                l.AddTail(v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// =================================================================
+// 3. ДИНАМИЧЕСКИЙ МАССИВ (Array)
+// =================================================================
+
+func (a *Array) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        data := a.data[:a.size] // Берем только реальные данные из array.go
+        return saveToFile(filename, data, isBinary)
+}</span>
+
+func (a *Array) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">a.data = make([]string, len(data))
+        copy(a.data, data)
+        a.size = len(data)
+        a.capacity = len(data)
+        return nil</span>
+}
+
+// =================================================================
+// 4. СТЕК (Stack)
+// =================================================================
+
+func (s *Stack) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        cur := s.head
+        for cur != nil </span><span class="cov0" title="0">{
+                data = append(data, cur.data)
+                cur = cur.next
+        }</span>
+        // Инвертируем, чтобы при загрузке через Push восстановить порядок
+        <span class="cov0" title="0">for i, j := 0, len(data)-1; i &lt; j; i, j = i+1, j-1 </span><span class="cov0" title="0">{
+                data[i], data[j] = data[j], data[i]
+        }</span>
+        <span class="cov0" title="0">return saveToFile(filename, data, isBinary)</span>
+}
+
+func (s *Stack) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">s.Clear()
+        for _, v := range data </span><span class="cov0" title="0">{
+                s.Push(v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// =================================================================
+// 5. ОЧЕРЕДЬ (Queue)
+// =================================================================
+
+func (q *Queue) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        cur := q.front
+        for cur != nil </span><span class="cov0" title="0">{
+                data = append(data, cur.data)
+                cur = cur.next
+        }</span>
+        <span class="cov0" title="0">return saveToFile(filename, data, isBinary)</span>
+}
+
+func (q *Queue) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []string
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        // Очистка и заполнение
+        <span class="cov0" title="0">q.front = nil
+        q.rear = nil
+        for _, v := range data </span><span class="cov0" title="0">{
+                q.Push(v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// =================================================================
+// 6. ХЕШ-ТАБЛИЦА (HashTable)
+// =================================================================
+
+func (ht *HashTable) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        data := make(map[string]int)
+        for _, item := range ht.Storage </span><span class="cov0" title="0">{
+                if item.IsSet </span><span class="cov0" title="0">{
+                        data[item.Key] = item.Value
+                }</span>
+        }
+        <span class="cov0" title="0">return saveToFile(filename, data, isBinary)</span>
+}
+
+func (ht *HashTable) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data map[string]int
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        // Перезаписываем данные в таблицу
+        <span class="cov0" title="0">for k, v := range data </span><span class="cov0" title="0">{
+                ht.Insert(k, v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// =================================================================
+// 7. БИНАРНОЕ ДЕРЕВО (CompleteBinaryTree)
+// =================================================================
+
+func (t *CompleteBinaryTree) Serialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []int
+        if t.root != nil </span><span class="cov0" title="0">{
+                // BFS обход для сохранения структуры CBT
+                queue := []*treeNode{t.root}
+                for len(queue) &gt; 0 </span><span class="cov0" title="0">{
+                        cur := queue[0]
+                        queue = queue[1:]
+                        data = append(data, cur.data)
+                        if cur.left != nil </span><span class="cov0" title="0">{
+                                queue = append(queue, cur.left)
+                        }</span>
+                        <span class="cov0" title="0">if cur.right != nil </span><span class="cov0" title="0">{
+                                queue = append(queue, cur.right)
+                        }</span>
+                }
+        }
+        <span class="cov0" title="0">return saveToFile(filename, data, isBinary)</span>
+}
+
+func (t *CompleteBinaryTree) Deserialize(filename string, isBinary bool) error <span class="cov0" title="0">{
+        var data []int
+        if err := loadFromFile(filename, &amp;data, isBinary); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">t.root = nil // Очистка корня
+        for _, v := range data </span><span class="cov0" title="0">{
+                t.Insert(v)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package classes
+
+import (
+        "fmt"
+)
+
+// private node
+type stackNode struct {
+        data string
+        next *stackNode
+}
+
+// Stack (PUBLIC)
+type Stack struct {
+        head *stackNode // private
+}
+
+func NewStack() *Stack <span class="cov8" title="1">{ // PUBLIC
+        return &amp;Stack{head: nil}
+}</span>
+
+// Public methods
+
+func (s *Stack) IsEmpty() bool <span class="cov8" title="1">{
+        return s.head == nil
+}</span>
+
+func (s *Stack) Push(value string) <span class="cov8" title="1">{
+        newNode := &amp;stackNode{
+                data: value,
+                next: s.head,
+        }
+        s.head = newNode
+}</span>
+
+func (s *Stack) Pop() string <span class="cov8" title="1">{
+        if s.IsEmpty() </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">value := s.head.data
+        s.head = s.head.next
+        return value</span>
+}
+
+func (s *Stack) Top() string <span class="cov8" title="1">{
+        if s.IsEmpty() </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">return s.head.data</span>
+}
+
+func (s *Stack) Clear() <span class="cov8" title="1">{
+        for !s.IsEmpty() </span><span class="cov8" title="1">{
+                s.Pop()
+        }</span>
+}
+
+func (s *Stack) Print() <span class="cov8" title="1">{
+        if s.IsEmpty() </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">fmt.Print("Стек (верх -&gt; низ): ")
+        cur := s.head
+        for cur != nil </span><span class="cov8" title="1">{
+                fmt.Print(cur.data, " ")
+                cur = cur.next
+        }</span>
+        <span class="cov8" title="1">fmt.Println()</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
